@@ -82,16 +82,20 @@ function questionTimer(){
  
   
    if(!clockRunning) {
-    intervalId = setInterval(function(){
-      time--;
-      $('.display').attr('id','clock').text(time);
      
-      console.log(time);
-    }, 1000);
-    clockRunning = true;
-    
-    
-   }
+      intervalId = setInterval(function(){
+        if(time > 0) {
+        time--;
+        $('.display').attr('id','clock').text(time);
+       
+        console.log(time);
+     } else {
+      console.log('Need pull next question');
+      clearInterval(intervalId);
+      return false; 
+     } }, 1000);
+     clockRunning = true;
+  }
     
 
 } //------------------------------Func SetTimer
