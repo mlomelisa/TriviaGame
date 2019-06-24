@@ -2,13 +2,14 @@ $(document).ready(function(){
 
   // Variables
   let userAnswer;
-  let totalCorrect;
-  let totalIncorrect;
-  let totalUnanswer;
+  let totalCorrect =0;
+  let totalIncorrect =0;
+  let totalUnanswer =0;
   let startBttn = false;
   let intervalId;
   let clockRunning = false;
-  let time = 30;
+  let time = 5;
+   let j = 0;
 
 
   let triviaArr = [
@@ -29,92 +30,186 @@ $(document).ready(function(){
 
   ]
 
-// Function that generates the Question from trivia Array
-  function questionLoad () {
-
-      let questionSec = $('<div>');
-      // Add question
-      questionSec.append($("<h3>").text(triviaArr[0].question));
-      $('.questions').append(questionSec);
-
-      // Add answers array
-      let answer = $('<ul>').addClass('list-group list-unstyled answers');
-    
-      $('.questions').append(answer);
-      
-
-      for (let i = 0; i < triviaArr[0].answers.length; i++) {
-        
-        var answerList = $("<li>").addClass('list-group-item d-flex justify-content-between align-items-center').attr({ dataindex: i, id:("answ"+i)});
-        answerList.append($('<input>').attr({ type: "radio", name: "answ" , value: i }));
-        answerList.append($('<label>').text(triviaArr[0].answers[i]));
-        $('.questions').append(answerList);
-        console.log(i + triviaArr[0].answers[i] )
-
-      }
-  } //--------------------------------Func Question load
-
-// Function to detect which option was select
-
-  function checkAnswer () {
-    let radios = document.getElementsByName('answ'); // Get the name from input
-    
-    for(let i = 0; i < radios.length; i++){
-        radios[i].onclick = function(){
-            userAnswer = this.value;
-            if ( triviaArr[0].correctAnswer === triviaArr[0].answers[userAnswer]) {
-              totalCorrect++;
-
-            } else {
-             
-              totalIncorrect++;
-
-            }
-        }
-    }
-}; //------------------------------Func CheckAnswer
-
-
-
-// Function set a timer
-
-function questionTimer(){
- 
-  
-   if(!clockRunning) {
-     
-      intervalId = setInterval(function(){
-        if(time > 0) {
-        time--;
-        $('.display').attr('id','clock').text(time);
-       
-        console.log(time);
-     } else {
-      console.log('Need pull next question');
-      clearInterval(intervalId);
-      return false; 
-     } }, 1000);
-     clockRunning = true;
-  }
-    
-
-} //------------------------------Func SetTimer
-
-
-
 // Initial function shows start button
 function startButton (){
   let startBtn = $('<button>');
   startBtn.addClass("btn btn-lg btn-outline-success btn-start").text('Start')
   $('.questions').append(startBtn);
   $('.btn-start').on('click' , function(){
-      questionLoad ();
-      checkAnswer ();
-      $('.btn-start').remove();
-      questionTimer();
+    console.log(j)
+    $('.btn-start').remove();
+    
+    generateQ(j);
+    questionTimer();
+    checkAnswer(j);
+    
+    // loadNewQ();  
+    
     startBttn = true;
   });
 }; // ---------------------------------Start button
+
+// Generate new question
+function generateQ(j){
+  $(".questionTitle").text(triviaArr[j].question);
+
+  let answer = $('<ul>').addClass('list-group list-unstyled answers').attr('id', "answ"+j);
+  
+  $('.questions').append(answer);
+  
+  
+  for (let i = 0; i < triviaArr[j].answers.length; i++) {
+    
+    var answerList = $("<li>").addClass('list-group-item d-flex justify-content-between align-items-center').attr({ dataindex: i});
+    answerList.append($('<input>').attr({ type: "radio", name: "answ" , value: i }));
+    answerList.append($('<label>').text(triviaArr[0].answers[i]));
+    answer.append(answerList);
+    console.log(i + triviaArr[j].answers[i] )
+  
+  }
+ 
+}//----------------------------------------generate new question
+
+function loadNewQ(j){
+      
+      generateQ(j);
+      checkAnswer(j);
+      
+} //---------------------------Load New Question
+
+// Timer Function
+function questionTimer(){
+  let displayClock = $('<div>').addClass('display');
+      $('.display').attr('id','clock').text(time);
+      $('.display-main').append(displayClock);
+      $('.display').text(time);
+  
+  if(!clockRunning) {   // Validate clockRunning variable is in false state
+     intervalId = setInterval(function(){
+     
+      
+       if(time > 0) {
+       
+       time--;
+       $('.display').text(time);
+      
+       console.log(time);
+    } else {
+     console.log('Need pull next question');
+     noAnswer();
+    console.log(time);
+    //  return false; 
+    } }, 1000);
+    clockRunning = true;
+ }
+   
+
+} //------------------------------Func SetTimer
+
+//Evaluate Correct question
+
+function correctAnswer(){
+  $('ul').remove();
+  $('li').remove();
+  $('.display').remove();
+  $(".questionTitle").text('Correct Answer!!!')
+  
+  resetTimer();
+      
+} //---------------correct Answer
+
+//Evaluate Incorrect question
+
+function incorrectAnswer(){
+  $('ul').remove();
+  $('li').remove();
+  $('.display').remove();
+  $(".questionTitle").text('Wrong Answer!!!')
+  $(".correctAnswer").text('Correct answer is: ' + triviaArr[j].correctAnswer);
+   
+  resetTimer();
+} //---------------Incorrect Answer
+
+//Evaluate No answer question
+
+function noAnswer(){
+  $('ul').remove();
+  $('li').remove();
+  $('.display').remove();
+  $(".questionTitle").text('You didnt answer!!')
+  $(".correctAnswer").text('Correct answer is: ' + triviaArr[j].correctAnswer);
+  resetTimer();
+  
+  
+} //---------------Incorrect Answer
+
+
+// Function to detect which option was select
+
+function checkAnswer(j) {
+  $("input[name='answ']").change(function() {
+
+    userAnswer = this.value;
+    if ( triviaArr[j].correctAnswer === triviaArr[j].answers[userAnswer]) {
+      totalCorrect++;
+      correctAnswer();
+    } else {
+     
+      totalIncorrect++;
+      incorrectAnswer();
+     } 
+     
+  });
+}; //------------------------------Func CheckAnswer
+
+// Reset Timer
+function resetTimer(){
+  
+    clearInterval(intervalId);
+    clockRunning = false;
+    time = 5;
+    
+    setTimeout(function(){
+      if( j < triviaArr.length){
+     console.log(j);
+     console.log(triviaArr.length);
+      $(".correctAnswer").text('');
+     
+      
+      questionTimer();
+      loadNewQ(j);
+      return j;
+    }
+    else{
+      result();
+      
+    }
+  
+  },2000);
+    
+    j++;
+
+ 
+
+
+} //--------------Reset Timer
+
+//Function Final result
+
+function result(){
+  $(".questionTitle").text('Result!!')
+  $(".correctAnswer").text('You have Total Answers correct: ' + totalCorrect + br
+  + 'You have Total Answers incorrect: ' + totalIncorrect
+  + 'You have Total questions without Answer: ' + totalUnanswer
+  
+  );
+
+
+
+  
+  
+
+}
 
 startButton();
 
