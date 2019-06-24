@@ -198,17 +198,23 @@ function resetTimer(){
 
 function result(){
   $(".questionTitle").text('Result!!')
-  $(".correctAnswer").text('You have Total Answers correct: ' + totalCorrect + br
-  + 'You have Total Answers incorrect: ' + totalIncorrect
-  + 'You have Total questions without Answer: ' + totalUnanswer
+  $(".correctAnswer").text('')
+
+  let resultList = $('<ul>').addClass('list-group list-unstyled resultGroup');
+
+ let correctAns = $("<li>").addClass('list-group-item d-flex justify-content-between align-items-center resultGroup').text('You have Total Answers correct: ' + totalCorrect);
+  resultList.append(correctAns)
+
+  let incorrectAns = $("<li>").addClass('list-group-item d-flex justify-content-between align-items-center resultGroup').text('You have Total Answers incorrect: ' + totalIncorrect);
+  resultList.append(incorrectAns)
+
+  let unAns = $("<li>").addClass('list-group-item d-flex justify-content-between align-items-center resultGroup').text('You have Total questions without Answer: ' + totalUnanswer);
+  resultList.append(unAns)
+
+  $('.questions').append(resultList);
+   
+   
   
-  );
-
-
-
-  
-  
-
 }
 
 startButton();
