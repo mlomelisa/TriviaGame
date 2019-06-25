@@ -242,6 +242,12 @@ function correctAnswer(){
 
   $(".questionTitle").text('Correct Answer!!!')
 
+  var giphyURL = $('<div>')
+  giphyURL.append($('<img>').addClass('correcGiphy').attr({ src: 'https://media.giphy.com/media/11sBLVxNs7v6WA/giphy.gif', width :480,
+  height : 217}));
+  
+  $('.questions').append(giphyURL);
+
 
   resetTimer();
      
@@ -266,7 +272,13 @@ function incorrectAnswer(){
 
   $(".correctAnswer").text('Correct answer is: ' + triviaArr[j].correctAnswer);
 
-   
+  var giphyURL2 = $('<div>')
+  giphyURL2.append($('<img>').addClass('correcGiphy').attr({ src: 'https://media.giphy.com/media/gnE4FFhtFoLKM/giphy.gif', width : 480,
+  height : 480}));
+  
+
+  
+  $('.questions').append(giphyURL2);
 
   resetTimer();
 
@@ -289,6 +301,17 @@ function noAnswer(){
   $(".questionTitle").text('You didnt answer!!')
 
   $(".correctAnswer").text('Correct answer is: ' + triviaArr[j].correctAnswer);
+
+  var giphyURL3 = $('<div>')
+  giphyURL3.append($('<img>').addClass('correcGiphy').attr({ src: 'https://media.giphy.com/media/m6OomwWCojfS8/giphy.gif', width : 480,
+  height : 361}));
+  
+
+  
+  $('.questions').append(giphyURL3);
+
+
+  
 
   resetTimer();
 
@@ -347,6 +370,7 @@ function resetTimer(){
       if( j < triviaArr.length){
 
       $(".correctAnswer").text('');
+      $('.correcGiphy').remove();
 
       questionTimer();
 
@@ -364,7 +388,7 @@ function resetTimer(){
 
   
 
-  },2000);
+  },2500);
 
     
 
