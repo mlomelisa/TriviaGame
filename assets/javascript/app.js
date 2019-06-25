@@ -12,53 +12,102 @@ $(document).ready(function(){
 
   let totalUnanswer =0;
 
-  let startBttn = false;
-
   let intervalId;
 
   let clockRunning = false;
 
-  let time = 5;
+  let time = 30;
 
-   let j = 0;
-
-
-
-
-
+  let j = 0;
+  
+  
   let triviaArr = [
-
-
-
-    q1 = {
-
-      question : 'Where will be the olymipic games on 2020?',
-
-      answers : ['Tokyo','Paris','Rio','Shangai'],
-
-      correctAnswer: 'Tokyo',
-
-      image : ''
-
+    q0 = {
+      question: 'update' ,
+      answers: [],
+      correctAnswer:'update'
     },
 
-
-
+    q1 = {
+      question: 'update' ,
+      answers: [],
+      correctAnswer:'update'
+    },
     q2 = {
+      question: 'update' ,
+      answers: [],
+      correctAnswer:'update'
+    },
 
-      question : 'Where was the olymipic games on 2016?',
+    q3 = {
+      question: 'update' ,
+      answers: [],
+      correctAnswer:'update'
+    },
+    q4 = {
+      question: 'update' ,
+      answers: [],
+      correctAnswer:'update'
+    },
 
-      answers : ['Tokyo','Paris','Rio','Shangai'],
+    q5 = {
+      question: 'update' ,
+      answers: [],
+      correctAnswer:'update'
+    },
+    q6 = {
+      question: 'update' ,
+      answers: [],
+      correctAnswer:'update'
+    },
 
-      correctAnswer: 'Rio',
+    q7 = {
+      question: 'update' ,
+      answers: [],
+      correctAnswer:'update'
+    },
+    q8 = {
+      question: 'update' ,
+      answers: [],
+      correctAnswer:'update'
+    },
 
-      image : ''
-
+    q9 = {
+      question: 'update' ,
+      answers: [],
+      correctAnswer:'update'
     }
-
-
-
   ]
+  
+  // function getQuestions(){
+    var searchQuestions = function(trivia) {
+      var queryUrl = "https://opentdb.com/api.php?amount=10";
+      $.ajax({
+        url: queryUrl,
+        method: "GET"
+      }).then(function(response) {
+        
+        // answers.push(response.results[0].correct_answer);
+      for (let a=0; a < response.results.length; a++ ){
+        $.extend(true, triviaArr[a], {
+          question: response.results[a].question,
+          answers : response.results[a].incorrect_answers,
+          
+          correctAnswer: response.results[a].correct_answer
+        });
+        var newAnsw = response.results[a].correct_answer;
+        triviaArr[a].answers.push(newAnsw);
+        triviaArr[a].answers.sort();
+
+      }
+        
+        
+      });
+    }
+  // }
+
+ 
+ console.log(triviaArr)
 
 
 
@@ -74,7 +123,7 @@ function startButton (){
 
   $('.btn-start').on('click' , function(){
 
-    console.log(j)
+ 
 
     $('.btn-start').remove();
 
@@ -106,45 +155,28 @@ function generateQ(j){
 
   $(".questionTitle").text(triviaArr[j].question);
 
-
-
   let answer = $('<ul>').addClass('list-group list-unstyled answers').attr('id', "answ"+j);
 
-  
 
   $('.questions').append(answer);
 
-  
-
-  
-
   for (let i = 0; i < triviaArr[j].answers.length; i++) {
 
-    
+    var answerList = $("<li>").addClass('list-group-item d-flex justify-content-between align-items-center');
 
-    var answerList = $("<li>").addClass('list-group-item d-flex justify-content-between align-items-center').attr({ dataindex: i});
+    answerList.append($('<input>').attr({ type: "radio", name: "answ", value: i}));
 
-    answerList.append($('<input>').attr({ type: "radio", name: "answ" , value: i }));
-
-    answerList.append($('<label>').text(triviaArr[0].answers[i]));
+    answerList.append($('<label>').text(triviaArr[j].answers[i]));
 
     answer.append(answerList);
 
-    console.log(i + triviaArr[j].answers[i] )
-
-  
-
   }
-
- 
 
 }//----------------------------------------generate new question
 
 
 
 function loadNewQ(j){
-
-      
 
       generateQ(j);
 
@@ -174,29 +206,19 @@ function questionTimer(){
 
      intervalId = setInterval(function(){
 
-     
-
-      
-
-       if(time > 0) {
-
-       
+       if(time > 0) {     
 
        time--;
 
        $('.display').text(time);
 
-      
-
-       console.log(time);
 
     } else {
 
-     console.log('Need pull next question');
 
      noAnswer();
 
-    console.log(time);
+
 
     //  return false; 
 
@@ -206,17 +228,9 @@ function questionTimer(){
 
  }
 
-   
-
-
-
 } //------------------------------Func SetTimer
 
-
-
 //Evaluate Correct question
-
-
 
 function correctAnswer(){
 
@@ -228,11 +242,9 @@ function correctAnswer(){
 
   $(".questionTitle").text('Correct Answer!!!')
 
-  
 
   resetTimer();
-
-      
+     
 
 } //---------------correct Answer
 
@@ -287,18 +299,14 @@ function noAnswer(){
 } //---------------Incorrect Answer
 
 
-
-
-
 // Function to detect which option was select
 
 
 
 function checkAnswer(j) {
+  
 
-  $("input[name='answ']").change(function() {
-
-
+  $("input:radio").change(function() {
 
     userAnswer = this.value;
 
@@ -310,15 +318,11 @@ function checkAnswer(j) {
 
     } else {
 
-     
-
       totalIncorrect++;
 
       incorrectAnswer();
 
-     } 
-
-     
+     }      
 
   });
 
@@ -336,23 +340,13 @@ function resetTimer(){
 
     clockRunning = false;
 
-    time = 5;
-
-    
+    time = 30;
 
     setTimeout(function(){
 
       if( j < triviaArr.length){
 
-     console.log(j);
-
-     console.log(triviaArr.length);
-
       $(".correctAnswer").text('');
-
-     
-
-      
 
       questionTimer();
 
@@ -364,9 +358,7 @@ function resetTimer(){
 
     else{
 
-      result();
-
-      
+      result();   
 
     }
 
@@ -440,7 +432,7 @@ function reset(){
 }
 
 startButton();
-
+searchQuestions();
 
 
 });

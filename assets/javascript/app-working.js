@@ -1,194 +1,369 @@
 $(document).ready(function(){
 
+
+
   // Variables
+
   let userAnswer;
+
   let totalCorrect =0;
+
   let totalIncorrect =0;
+
   let totalUnanswer =0;
+
+  let startBttn = false;
+
   let intervalId;
+
   let clockRunning = false;
+
   let time = 5;
+
    let j = 0;
-   let increaseQ = 0;
+  
+   let triviaLength = 0;
+
+
+
+
+
 
 
   let triviaArr = [
 
+
+
     q1 = {
+
       question : 'Where will be the olymipic games on 2020?',
+
       answers : ['Tokyo','Paris','Rio','Shangai'],
+
       correctAnswer: 'Tokyo',
+
       image : ''
+
     },
 
+
+
     q2 = {
+
       question : 'Where was the olymipic games on 2016?',
+
       answers : ['Tokyo','Paris','Rio','Shangai'],
+
       correctAnswer: 'Rio',
+
       image : ''
+
     }
 
-  ]
 
+
+  ]
+  
+  
 // Initial function shows start button
+
 function startButton (){
+
   let startBtn = $('<button>');
+
   startBtn.addClass("btn btn-lg btn-outline-success btn-start").text('Start')
+
   $('.questions').append(startBtn);
+
   $('.btn-start').on('click' , function(){
-    
+
+    console.log(j)
+
     $('.btn-start').remove();
+
     
+
+    generateQ(j);
+
+    questionTimer();
+
+    checkAnswer(j);
+
     
-      generateQ(j);
-      checkAnswer(j);
-      console.log(j + ' questionLoad pre');
-      questionTimer();
+
+    // loadNewQ();  
+
     
-   
+
+    startBttn = true;
+
   });
- 
-  
-  
+
 }; // ---------------------------------Start button
 
+
+
 // Generate new question
+
 function generateQ(j){
 
   $(".questionTitle").text(triviaArr[j].question);
 
+
+
   let answer = $('<ul>').addClass('list-group list-unstyled answers').attr('id', "answ"+j);
+
   
+
   $('.questions').append(answer);
+
   
+
   
+
   for (let i = 0; i < triviaArr[j].answers.length; i++) {
+
     
+
     var answerList = $("<li>").addClass('list-group-item d-flex justify-content-between align-items-center').attr({ dataindex: i});
+
     answerList.append($('<input>').attr({ type: "radio", name: "answ" , value: i }));
+
     answerList.append($('<label>').text(triviaArr[0].answers[i]));
+
     answer.append(answerList);
-    
+
+    console.log(i + triviaArr[j].answers[i] )
+
   
+
   }
+
  
+
 }//----------------------------------------generate new question
+
+
 
 function loadNewQ(j){
 
+      
+
       generateQ(j);
+
       checkAnswer(j);
 
       
+
 } //---------------------------Load New Question
 
+
+
 // Timer Function
+
 function questionTimer(){
+
   let displayClock = $('<div>').addClass('display');
+
       $('.display').attr('id','clock').text(time);
+
       $('.display-main').append(displayClock);
+
       $('.display').text(time);
+
   
+
   if(!clockRunning) {   // Validate clockRunning variable is in false state
+
      intervalId = setInterval(function(){
+
      
+
       
+
        if(time > 0) {
+
        
+
        time--;
+
        $('.display').text(time);
+
       
-      
+
+       console.log(time);
+
     } else {
-     
-     noAnswer(j);
-   
+
+     console.log('Need pull next question');
+
+     noAnswer();
+
+    console.log(time);
+
     //  return false; 
+
     } }, 1000);
+
     clockRunning = true;
+
  }
- console.log(j + 'questionTimer');
- 
+
+   
+
+
+
 } //------------------------------Func SetTimer
+
+
 
 //Evaluate Correct question
 
-function correctAnswer(j){
+
+
+function correctAnswer(){
+
   $('ul').remove();
+
   $('li').remove();
+
   $('.display').remove();
+
   $(".questionTitle").text('Correct Answer!!!')
+
   
-  resetTimer(j);
+
+  resetTimer();
+
       
+
 } //---------------correct Answer
+
+
 
 //Evaluate Incorrect question
 
-function incorrectAnswer(j){
+
+
+function incorrectAnswer(){
+
   $('ul').remove();
+
   $('li').remove();
+
   $('.display').remove();
+
   $(".questionTitle").text('Wrong Answer!!!')
+
   $(".correctAnswer").text('Correct answer is: ' + triviaArr[j].correctAnswer);
+
    
-  resetTimer(j);
+
+  resetTimer();
+
 } //---------------Incorrect Answer
+
+
 
 //Evaluate No answer question
 
-function noAnswer(j){
+
+
+function noAnswer(){
+
   $('ul').remove();
+
   $('li').remove();
+
   $('.display').remove();
+
   $(".questionTitle").text('You didnt answer!!')
+
   $(".correctAnswer").text('Correct answer is: ' + triviaArr[j].correctAnswer);
-  resetTimer(j);
+
+  resetTimer();
+
+  totalUnanswer++;
+
   
-  
+
 } //---------------Incorrect Answer
+
+
+
 
 
 // Function to detect which option was select
 
+
+
 function checkAnswer(j) {
+
   $("input[name='answ']").change(function() {
-    console.log(j + ' checkAnswer')
+
+
 
     userAnswer = this.value;
+    console.log('radio ' + userAnswer);
+
     if ( triviaArr[j].correctAnswer === triviaArr[j].answers[userAnswer]) {
+
       totalCorrect++;
+
       correctAnswer();
+
     } else {
+
      
+
       totalIncorrect++;
+
       incorrectAnswer();
+
      } 
+
      
+
   });
+
 }; //------------------------------Func CheckAnswer
 
+
+
 // Reset Timer
-function resetTimer(j){
+
+function resetTimer(){
+
   
+
     clearInterval(intervalId);
+
     clockRunning = false;
+
     time = 5;
-    increaseQ++;
-    j = increaseQ;
+
+    
 
     setTimeout(function(){
-     
+
       if( j < triviaArr.length){
-        
-    
-     
+
+     console.log(j);
+
+     console.log(triviaArr.length);
+
       $(".correctAnswer").text('');
+
      
-     
+
+      
+
       questionTimer();
+
       loadNewQ(j);
-      console.log(j);
+
+      return j;
+
     }
 
     else{
@@ -198,43 +373,78 @@ function resetTimer(j){
       
 
     }
-   
-  },2000);
-  return j;
+
   
+
+  },2000);
+
+    
+
+    j++;
+
+
+
 } //--------------Reset Timer
+
+
 
 //Function Final result
 
+
 function result(){
+
   $(".questionTitle").text('Result!!')
+
   $(".correctAnswer").text('')
+
+
 
   let resultList = $('<ul>').addClass('list-group list-unstyled resultGroup');
 
+
+
  let correctAns = $("<li>").addClass('list-group-item d-flex justify-content-between align-items-center resultGroup').text('You have Total Answers correct: ' + totalCorrect);
+
   resultList.append(correctAns)
 
+
+
   let incorrectAns = $("<li>").addClass('list-group-item d-flex justify-content-between align-items-center resultGroup').text('You have Total Answers incorrect: ' + totalIncorrect);
+
   resultList.append(incorrectAns)
 
+
+
   let unAns = $("<li>").addClass('list-group-item d-flex justify-content-between align-items-center resultGroup').text('You have Total questions without Answer: ' + totalUnanswer);
+
   resultList.append(unAns)
 
-  $('.questions').append(resultList);
-   
- 
-//   setTimeout(function(){
-//     j=0;
-//     totalCorrect =0;
-//     totalIncorrect =0;
-//     totalUnanswer =0;
 
-//     $('.resultGroup').remove();
-//     resetTimer()},2000);
-    
- }
+
+  $('.questions').append(resultList);
+
+  setTimeout(reset,2000);
+  setTimeout(resetTimer,10);
+}
+
+//Reset Function
+
+function reset(){
+  j=0;
+  totalCorrect =0;
+
+  totalIncorrect =0;
+
+  totalUnanswer =0;
+
+  $('.resultGroup').remove();
+
+  return j;
+
+}
 
 startButton();
+searchQuestions();
+
 
 });
