@@ -388,7 +388,7 @@ function resetTimer(){
 
   
 
-  },2500);
+  },2000);
 
     
 
