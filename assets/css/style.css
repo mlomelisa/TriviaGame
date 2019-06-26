@@ -2,27 +2,55 @@
   box-sizing: border-box;
 }
 
+body {
+  background: url(../images/leaves.png);
+  height: 2000px;
+}
+
 h1 {
   text-align: center;
+  padding: 25px;
 }
+
+header {
+  background-color: aquamarine;
+}
+.questionTitle {
+  text-align: center;
+}
+
+.correctAnswer {
+  text-align: center;
+  padding-top: 20px;
+}
+
 
 .display-main {
   text-align: center;
-  font-size: 2em;
+  font-size: 3em;
+  font-weight: bolder;
 }
 
 .questions {
-  padding-left: 10em;
-  padding-right: 10em;
-  margin-top: 5em;
+  padding-left: 30em;
+  padding-right: 30em;
+  margin-top: 10px;
+
 }
 
 label {
   font-size: 20px;
+  padding: 20px;
+}
+
+button {
+  text-align: center;
+  display: inline-flex;
+  padding: 20px;
 }
 
 img {
-  width : 480px;
-  height : 217px;
-
+  margin-left: 15em;
+ 
+  text-align: center;
 }

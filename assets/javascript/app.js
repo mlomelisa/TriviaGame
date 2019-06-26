@@ -123,7 +123,7 @@ function startButton (){
 
   $('.btn-start').on('click' , function(){
 
- 
+    $('.correctAnswer').text('');
 
     $('.btn-start').remove();
 
@@ -147,7 +147,7 @@ function startButton (){
 
 }; // ---------------------------------Start button
 
-
+startButton();
 
 // Generate new question
 
@@ -162,11 +162,11 @@ function generateQ(j){
 
   for (let i = 0; i < triviaArr[j].answers.length; i++) {
 
-    var answerList = $("<li>").addClass('list-group-item d-flex justify-content-between align-items-center');
+    var answerList = $("<li>").addClass('list-group-item justify-content-between align-items-center');
 
     answerList.append($('<input>').attr({ type: "radio", name: "answ", value: i}));
 
-    answerList.append($('<label>').text(triviaArr[j].answers[i]));
+    answerList.append($('<label>').addClass('align-self-center').text(triviaArr[j].answers[i]));
 
     answer.append(answerList);
 
@@ -298,7 +298,7 @@ function noAnswer(){
 
   $('.display').remove();
 
-  $(".questionTitle").text('You didnt answer!!')
+  $(".questionTitle").text('Runs out of time!!')
 
   $(".correctAnswer").text('Correct answer is: ' + triviaArr[j].correctAnswer);
 
@@ -407,7 +407,11 @@ function result(){
 
   $(".questionTitle").text('Result!!')
 
-  $(".correctAnswer").text('')
+  $(".correctAnswer").text('');
+
+  $('.correcGiphy').remove();
+
+  
 
 
 
@@ -435,28 +439,45 @@ function result(){
 
   $('.questions').append(resultList);
 
-  setTimeout(reset,2000);
-  setTimeout(resetTimer,10);
+  restartBtn();
+ 
 }
 
 //Reset Function
 
-function reset(){
+function restartBtn(){
+
+  let restartBttn = $('<button>');
+
+  restartBttn.addClass("btn btn-lg btn-outline-success btn-restart").text('Start Again')
+
+  $('.questions').append(restartBttn);
+
+  $('.btn-restart').on('click' , function(){
+   
+ 
   j=0;
   totalCorrect =0;
 
   totalIncorrect =0;
 
   totalUnanswer =0;
+  $(".questionTitle").text('')
 
   $('.resultGroup').remove();
-
+  $('.btn-restart').remove();
+  resetTimer();
   return j;
 
-}
+ 
 
-startButton();
+});
+
+};
+
+
 searchQuestions();
+
 
 
 });
