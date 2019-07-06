@@ -87,17 +87,25 @@ $(document).ready(function(){
         method: "GET"
       }).then(function(response) {
         
-        // answers.push(response.results[0].correct_answer);
+       
       for (let a=0; a < response.results.length; a++ ){
+        
+        var questionErr = response.results[a].question.replace(/&quot;+/g," ");
+        var questionQUot = questionErr.replace(/&;+/g," ");
+       
+        question = questionQUot.replace(/#039+/g,"");
+       
+        console.log(question);
         $.extend(true, triviaArr[a], {
-          question: response.results[a].question,
-          answers : response.results[a].incorrect_answers,
-          
+          // question: response.results[a].question,
+          question : question,
+          answers : response.results[a].incorrect_answers,       
           correctAnswer: response.results[a].correct_answer
         });
         var newAnsw = response.results[a].correct_answer;
         triviaArr[a].answers.push(newAnsw);
         triviaArr[a].answers.sort();
+        
 
       }
         
